@@ -97,4 +97,4 @@ For questions about this repository, please contact Charles Parker &lt;<ctparker
 ***
 
 ### License
-Lawrence Berkeley National Labs BSD variant license
+[BSD-3-Clause-LBNL](https://spdx.org/licenses/BSD-3-Clause-LBNL.html) Lawrence Berkeley National Labs BSD variant license
