@@ -9,10 +9,7 @@ The ultimate goal is to develop a common method for querying data from our respe
 ## Contributing
 Any member of the BERtron Systems Engineering Team may contribute to this project. The scratch project has no particular requirements for organization, so feel free to create new folders as needed to organize your content as makes sense to you. Eventually, we will have a separate project in this repository for a shared code base that will have a set of guidelines for contributions (TBD).
 
-For this project, simply commit to the main branch.
-
-- [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line)
+For this project, simply commit to the main branch for now. We'll develop commit rules and processes if/when needed.
 
 ## Other Project Resources
 
@@ -26,14 +23,14 @@ Phase 1 Activities from
 [Planning Proposal](https://docs.google.com/presentation/d/18u63d00IfMEv0kEDuaYAQkkwGURGY9IP/edit?usp=drive_link&ouid=105935390335622188775&rtpof=true&sd=true) (October 3, 2024)
 </summary>
 
-![BERtron Phase 1 Activities](phase1/BERtron_Phase_1_Activities.png "BERtron Phase 1 Activities")
+![BERtron Phase 1 Activities](BERtron_Phase_1_Activities.png "BERtron Phase 1 Activities")
 
 </details>
 
 ### Presentations and Documents
 - [Google Drive](https://drive.google.com/drive/folders/0ADpfATPiaJHIUk9PVA) (for presentations and documents)
 - [Codeathon 1](https://drive.google.com/drive/folders/1m7RgtUs3TPYzZnwRxmLMIMJbCevrTUCK) (Berkeley Lab, October 29 – 30, 2024)
-- Codeathon 2 (Virtual, last week of February 2025) - in planning
+- Codeathon 2 (Virtual, March 6-7, 2025)
 - Codeathon 3 (Berkeley Lab, June 2025) - TBD
 
 ### User Research 1 (October - December 2024)
