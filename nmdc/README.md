@@ -16,11 +16,11 @@ flowchart LR
         nmdc_api --> nmdc_db
     end
     
-    notebook[["Python notebook<br><code>get_nmdc_biosample_geo_coordinates.ipynb</code>"]]
+    notebook[["Python notebook<br>get_nmdc_biosample_geo_coordinates.ipynb"]]
     notebook -- Biosample metadata<br>requests --> nmdc_api
     notebook -- Biosample metadata --> csv_file
     nmdc_api -. Biosample metadata .-> notebook
-    csv_file["CSV File<br><code>nmdc_biosample_geo_coordinates.csv</code>"]
+    csv_file["CSV File<br>nmdc_biosample_geo_coordinates.csv"]
 ```
 
 ## References
