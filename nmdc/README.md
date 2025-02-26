@@ -2,7 +2,7 @@
 
 This directory contains a Python notebook you can use to fetch location-related metadata about biosamples residing
 in the NMDC database—via the NMDC API—and store that metadata in a CSV file. This directory also contains an example
-of such a CSV file.
+CSV file that was created that way.
 
 Here's a diagram depicting the relationships between the NMDC database, the Python notebook in this directory,
 and the CSV file in this directory.
