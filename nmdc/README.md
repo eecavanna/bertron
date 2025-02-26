@@ -1,10 +1,11 @@
 # NMDC
 
-This directory contains information about retrieving geographical location information about biosamples in the NMDC database.
+This directory contains a Python notebook you can use to fetch location-related metadata about biosamples residing
+in the NMDC database—via the NMDC API—and store that metadata in a CSV file. This directory also contains an example
+of such a CSV file.
 
-## Contents
-
-Here's a diagram depicting the relationships between the NMDC database and the files in this directory.
+Here's a diagram depicting the relationships between the NMDC database, the Python notebook in this directory,
+and the CSV file in this directory.
 
 ```mermaid
 flowchart LR
@@ -15,14 +16,16 @@ flowchart LR
         nmdc_api --> nmdc_db
     end
     
-    notebook[["get_nmdc_biosample_geo_data.ipynb"]]
+    notebook[["Python notebook<br><code>get_nmdc_biosample_geo_coordinates.ipynb</code>"]]
     notebook -- Biosample metadata<br>requests --> nmdc_api
     notebook -- Biosample metadata --> csv_file
     nmdc_api -. Biosample metadata .-> notebook
-    csv_file[("lat_lons_by_biosample_id.csv")]
+    csv_file["CSV File<br><code>nmdc_biosample_geo_coordinates.csv</code>"]
 ```
 
 ## References
+
+Here are some other documents you may find helpful when exploring the contents of this directory.
 
 - [Using Python to access the NMDC API](https://docs.microbiomedata.org/runtime/nb/api_access_via_python/)
 - [NMDC Schema documentation page about the `Biosample` schema class](https://microbiomedata.github.io/nmdc-schema/Biosample/)
