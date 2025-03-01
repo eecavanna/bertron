@@ -64,16 +64,15 @@ python geo_importer.py --data-dir /path/to/data --mongodb-uri mongodb://username
 
 ## geo_query.py
 
-This tool provides query and visualization capabilities for geospatial data stored in MongoDB.
+This tool provides basic query and visualization capabilities for geospatial data stored in MongoDB.
 
 ### Features
 
 - Get database statistics
-- Query by system name or dataset ID
+- Query by dataset ID
 - Perform geospatial queries (bounding box, proximity)
-- Generate interactive maps with Folium
+- Generate simple interactive maps with Folium
 - Export results to CSV or JSON
-- Create summary reports
 
 ### Usage Examples
 
@@ -82,9 +81,9 @@ This tool provides query and visualization capabilities for geospatial data stor
 python geo_query.py --action stats
 ```
 
-**Query by system name:**
+**Query by dataset ID:**
 ```bash
-python geo_query.py --action system --system-name ESSDIVE --format map --output essdive_locations
+python geo_query.py --action dataset --dataset-id "ess-dive-123456" --format map --output dataset_map
 ```
 
 **Find points within a geographic region:**
@@ -97,9 +96,9 @@ python geo_query.py --action box --west -140 --east -60 --north 60 --south 20 --
 python geo_query.py --action nearby --lat 37.8764 --lng -122.2608 --distance 50000
 ```
 
-**Create separate maps for each system type:**
+**Create a map of all (or limited subset) data points:**
 ```bash
-python geo_query.py --action all --format csv --output system_maps
+python geo_query.py --action map --limit 1000 --output all_points
 ```
 
 ### Output Formats
@@ -110,37 +109,24 @@ python geo_query.py --action all --format csv --output system_maps
 
 ## Common Query Examples
 
-1. **Find all EMSL points in Alaska:**
+1. **Find all points in Alaska:**
    ```bash
-   python geo_query.py --action box --west -180 --east -130 --north 72 --south 55 --system-name EMSL --format map --output alaska_emsl
+   python geo_query.py --action box --west -180 --east -130 --north 72 --south 55 --format map --output alaska_points
    ```
 
-2. **Export all JGI-Biosamples data to CSV:**
+2. **Export dataset to CSV:**
    ```bash
-   python geo_query.py --action system --system-name JGI-Biosamples --format csv --output jgi_biosamples_data
+   python geo_query.py --action dataset --dataset-id "60846" --format csv --output proposal_data
    ```
 
-3. **Find NMDC samples within 100km of Los Alamos:**
+3. **Find samples within 100km of Los Alamos:**
    ```bash
-   python geo_query.py --action nearby --lat 35.8800 --lng -106.3031 --distance 100000 --system-name NMDC --format map --output los_alamos_nmdc
+   python geo_query.py --action nearby --lat 35.8800 --lng -106.3031 --distance 100000 --format map --output los_alamos_nearby
    ```
 
-4. **Generate individual maps for each system type:**
+4. **Generate a map of all data (limited to 5000 points):**
    ```bash
-   python geo_query.py --action all --output system_maps
+   python geo_query.py --action map --limit 5000 --output all_data_map
    ```
 
-## Limitations and Considerations
 
-- Very large geospatial datasets can be memory-intensive
-- The `--limit` parameter (default: 1000) can be used to restrict result sizes
-- For very large JGI datasets, the `--skip-large-files` option can be used during testing
-- MongoDB geospatial indexes are created automatically during import
-
-## License
-
-[Add your license information here]
-
-## Contact
-
-[Add your contact information here]
