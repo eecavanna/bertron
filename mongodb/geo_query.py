@@ -341,7 +341,7 @@ def main():
                         help='Eastern longitude for box queries')
     parser.add_argument('--north', type=float,
                         help='Northern latitude for box queries')
-    parser.add_argument('--limit', type=int, default=1000,
+    parser.add_argument('--limit', type=int, default=100000,
                         help='Maximum number of results')
     parser.add_argument('--output', type=str, default='output',
                         help='Output file name prefix (without extension)')
