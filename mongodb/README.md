@@ -129,4 +129,13 @@ python geo_query.py --action map --limit 1000 --output all_points
    python geo_query.py --action map --limit 5000 --output all_data_map
    ```
 
+5. **Get all points with system_name = "ESSDIVE":**
+  ```bash
+  python geo_query.py --action system --system-name ESSDIVE --format map --output essdive_map
+  ```
+
+6. **Get all points with a specific system_name and export to CSV:**
+  ```bash
+  python geo_query.py --action system --system-name NMDC --format csv --output nmdc_data
+  ```
 

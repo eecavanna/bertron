@@ -98,6 +98,22 @@ class GeoQuery:
                 'east': boundary['maxLng']
             } if boundary else None
         }
+
+    def find_by_system(self, system_name: str, limit: int = 1000) -> List[Dict[str, Any]]:
+        """Find all points from a specific system.
+        
+        Args:
+            system_name: The system name to search for
+            limit: Maximum number of results to return
+            
+        Returns:
+            List of matching documents
+        """
+        logger.info(f"Searching for system: {system_name}")
+        
+        cursor = self.collection.find({'system_name': system_name}).limit(limit)
+        return list(cursor)
+        
         
     def find_by_dataset(self, dataset_id: str) -> List[Dict[str, Any]]:
         """Find all points in a specific dataset.
@@ -303,10 +319,12 @@ def main():
     parser.add_argument('--mongodb-uri', type=str, default='mongodb://localhost:27017',
                         help='MongoDB connection string')
     parser.add_argument('--action', type=str, required=True, 
-                        choices=['stats', 'dataset', 'box', 'nearby', 'map'],
+                        choices=['stats', 'dataset', 'system', 'box', 'nearby', 'map'],
                         help='Query action to perform')
     
     # Parameters for different query types
+    parser.add_argument('--system-name', type=str,
+                        help='System name for system queries')
     parser.add_argument('--dataset-id', type=str,
                         help='Dataset ID for dataset queries')
     parser.add_argument('--lat', type=float,
@@ -367,7 +385,27 @@ def main():
                 query.export_to_csv(results, f"{args.output}.csv")
             elif args.format == 'map':
                 query.create_map(results, f"{args.output}.html")
+
+        elif args.action == 'system':
+            # Validate parameters
+            if not args.system_name:
+                logger.error("Missing system-name parameter")
+                return 1
                 
+            # Query by system name
+            results = query.find_by_system(args.system_name, args.limit)
+            logger.info(f"Found {len(results)} records for system {args.system_name}")
+            
+            # Output results
+            if args.format == 'json':
+                with open(f"{args.output}.json", 'w') as f:
+                    json.dump(results, f, indent=2, default=str)
+                logger.info(f"Results saved to {args.output}.json")
+            elif args.format == 'csv':
+                query.export_to_csv(results, f"{args.output}.csv")
+            elif args.format == 'map':
+                query.create_map(results, f"{args.output}.html")                
+         
         elif args.action == 'box':
             # Validate parameters
             if None in [args.west, args.south, args.east, args.north]:
