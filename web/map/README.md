@@ -4,13 +4,16 @@
 
 This web page displays all samples from all projects on a single map.
 
-By default, the entire world map is visible.
-You can click the `+`/`-` buttons on the map to zoom in/out. Samples are grouped into clusters, where the cluster color
-indicates whether there is a small, medium, or large number of samples in that cluster, regardless of sample origin or
-type.
+By default, the entire world map is visible. You can click the `+`/`-` buttons
+on the map to zoom in/out. You can click the magnifying glass button to search
+by address.
 
-The `index.html` file, itself, is about 10 KB in size. When a web browser loads the file and runs the JavaScript scripts
-within it, the web browser will fetch an additional 1.5 MB of gzipped resources from GitHub (about 8.5 MB when unzipped).
+Samples are grouped into clusters, where the color of the cluster indicates
+whether there is a small, medium, or large number of samples in that region.
+
+The `index.html` file, itself, is about 10 KB in size. When a web browser loads
+the file and runs the JavaScript scripts within it, the web browser will fetch
+an additional 1.5 MB of gzipped resources from GitHub (about 8.5 MB when unzipped).
 
 ## Technologies
 
@@ -36,13 +39,17 @@ npx prettier . --write
 
 ### Directory structure
 
-I opted to keep the HTML, CSS, and JavaScript in a single file to facilitate rapid early prototyping.
-Before developing this beyond the prototype stage, I'd recommend extracting the JavaScript into a separate file(s),
-using a package manager such as NPM to manage JavaScript dependencies, etc.
+I opted to keep the HTML, CSS, and JavaScript in a single file to facilitate
+rapid early prototyping. Before developing this beyond the prototype stage,
+I'd recommend extracting the JavaScript into a separate file(s), using a
+package manager such as NPM to manage JavaScript dependencies, etc.
 
 ## Roadmap (draft)
 
 Here are some ideas I have for future development (in no particular order):
-- Allow the user to toggle all markers associated with a given data source (e.g. NMDC vs. ESS-Dive) on/off
+
+- Allow the user to toggle all markers associated with a given data source
+  (e.g. NMDC vs. ESS-Dive) on/off
 - Use the data source's logo instead of the generic marker image
-- Add hyperlinks (leading to more information about the sample) to the marker popups
+- Add hyperlinks (leading to more information about the sample) to the marker
+  popups
