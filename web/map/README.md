@@ -9,20 +9,18 @@ You can click the `+`/`-` buttons on the map to zoom in/out. Samples are grouped
 indicates whether there is a small, medium, or large number of samples in that cluster, regardless of sample origin or
 type.
 
-The `index.html` file, itself, is about 8 KB in size. When a web browser loads the file and runs the JavaScript scripts
+The `index.html` file, itself, is about 10 KB in size. When a web browser loads the file and runs the JavaScript scripts
 within it, the web browser will fetch an additional 1.5 MB of gzipped resources from GitHub (about 8.5 MB when unzipped).
 
 ## Technologies
 
 This web page is built upon the following technologies:
 
-- [Leaflet](https://leafletjs.com/) - to show the map
-- [Leaflet.markercluster](https://github.com/Leaflet/Leaflet.markercluster) - to show map markers as clusters  
-- [PapaParse](https://github.com/mholt/PapaParse) - to fetch and parse CSV files
-- [Prettier](https://prettier.io) - to format our source code
-- [Bootstrap 5](https://getbootstrap.com/) - to style the web page elements other than the map
-
-> Note: I have not reviewed the licenses of those technologies. 
+- [Leaflet](https://leafletjs.com/) - to show the map ([BSD 2-Clause "Simplified" license](https://github.com/Leaflet/Leaflet/blob/main/LICENSE))
+- [Leaflet.markercluster](https://github.com/Leaflet/Leaflet.markercluster) - to show map markers as clusters ([MIT license](https://github.com/Leaflet/Leaflet.markercluster/blob/master/MIT-LICENCE.txt))
+- [PapaParse](https://github.com/mholt/PapaParse) - to fetch and parse CSV files ([MIT license](https://github.com/mholt/PapaParse/blob/master/LICENSE))
+- [Prettier](https://prettier.io) - to format our source code ([MIT license](https://github.com/prettier/prettier/blob/main/LICENSE))
+- [Bootstrap 5](https://getbootstrap.com/) - to style the web page elements other than the map ([MIT license](https://github.com/twbs/bootstrap/blob/main/LICENSE))
 
 ## Development
 
@@ -31,9 +29,12 @@ This web page is built upon the following technologies:
 We use Prettier to format the code in this directory. You can format it by running:
 
 ```shell
-npx prettier index.html --write
+# Run from this directory.
+npx prettier . --write
 ```
 
-### Project structure
+### Directory structure
 
-I opted to keep the HTML, CSS, and JavaScript in a single file to facilitate rapid development. This was implemented as a PoC. If building upon this past a certain point, I'd recommend separating the HTML, CSS, and JavaScript into separate files, using a package manager to manage dependencies, etc. 
+I opted to keep the HTML, CSS, and JavaScript in a single file to facilitate rapid early prototyping.
+Before developing this beyond the prototype stage, I'd recommend extracting the JavaScript into a separate file(s),
+using a package manager such as NPM to manage JavaScript dependencies, etc.

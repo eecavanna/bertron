@@ -51,7 +51,7 @@
 
     <!-- A spinner that indicates that we are loading data. -->
     <div id="spinner" hidden>
-      <div class="spinner-border spinner-border-sm" role="status">
+      <div class="spinner-border spinner-border-sm m-1" role="status">
         <span class="visually-hidden">Loading data...</span>
       </div>
     </div>
@@ -85,29 +85,36 @@
     <script>
       (async function () {
         /**
-         * Uses PapaParse to both fetch, and parse, a CSV file.
-         * If fetching and parsing are successful, this function
-         * returns a Promise that resolves to the parsed data.
-         * Otherwise, this function returns a Promise that resolves
-         * to an error descriptor.
-         *
-         * @param fileUrl URL of the CSV file
-         * @return {Promise}
+         * Fetch and parse the CSV file at the specified URL.
          *
          * Reference: https://www.papaparse.com/docs#csv-to-json
+         *
+         * @param {string} csvFileUrl The URL of the CSV file
+         *
+         * @return {Promise} A `Promise` that resolves to either (a) the parsed
+         *                   data, if both fetching and parsing were
+         *                   successful; or (b) an error descriptor, if either
+         *                   fetching or parsing was not successful.
          */
-        function fetchAndParseCsvFile(fileUrl) {
+        function fetchAndParseCsvFile(csvFileUrl) {
           return new Promise((resolve, reject) => {
-            Papa.parse(fileUrl, {
+            Papa.parse(csvFileUrl, {
+              // Interpret arg as URL, not as CSV string.
               download: true,
-              header: true, // produces array of objects, instead of array of arrays
-              skipEmptyLines: true,
-              complete: (results, file) => {
-                console.debug("Fetching and parsing complete.", results, file);
+              // Make an array of objects, not an array of arrays.
+              header: true,
+              // Skip lines that are devoid of any content.
+              skipEmptyLines: "greedy",
+              // Delegate parsing to a worker, so the UI remains responsive.
+              worker: true,
+              // After fetching and parsing is complete, resolve the `Promise`.
+              complete: (results) => {
+                console.debug("Fetching and parsing finished.", results);
                 resolve(results.data);
               },
-              error: (error, file) => {
-                console.error("Fetch or parsing failed.", error, file);
+              // After fetching or parsing fails, reject the `Promise`.
+              error: (error) => {
+                console.error("Fetch or parsing failed.", error);
                 reject(error);
               },
             });
@@ -115,142 +122,110 @@
         }
 
         /**
-         * Draws a map on the HTML element having the specified ID.
+         * Draw a map on the HTML element having the specified `id` value,
+         * returning the Leaflet map object.
          *
          * Reference: https://leafletjs.com/examples/quick-start/
+         *
+         * @param {string} elementId The `id` of the HTML element
          */
         function initializeMap(elementId) {
-          // Create a map.
-          const map = L.map(elementId, {
-            zoomAnimation: false,
-          })
-            .fitWorld()
-            .zoomIn();
+          // Create a map where, by default, the whole world is in view.
+          const map = L.map(elementId).fitWorld().zoomIn();
 
-          map.on("resize", () => {
-            map.fitWorld({ reset: true }).zoomIn();
-          });
-
-          // Add a tile layer.
-          L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            maxZoom: 19,
-            attribution:
-              '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+          // Add a layer of files provided by OpenStreetMap.
+          const tileUrlTemplate =
+            "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+          const tileAttributionHTML =
+            '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+          L.tileLayer(tileUrlTemplate, {
+            attribution: tileAttributionHTML,
           }).addTo(map);
 
           return map;
         }
 
-        /**
-         * Makes the HTML element having the specified ID, visible.
-         *
-         * @param elementId
-         */
-        function showSpinner(elementId) {
-          document.getElementById(elementId).removeAttribute("hidden");
-        }
+        // Show the spinner.
+        document.getElementById("spinner").removeAttribute("hidden");
 
-        /**
-         * Hides the HTML element having the specified ID.
-         *
-         * @param elementId
-         */
-        function hideSpinner(elementId) {
-          document.getElementById(elementId).setAttribute("hidden", "hidden");
-        }
-
-        showSpinner("spinner");
-
+        // Initialize the map.
         const map = initializeMap("map");
+
+        // Initialize the cluter group to which we will add markers.
         const markerClusterGroup = L.markerClusterGroup();
 
-        // Fetch the NMDC CSV file and create a marker for each row.
+        // Fetch the NMDC Biosamples CSV file and create a marker for each row.
         const nmdcObjs = await fetchAndParseCsvFile(
           "https://raw.githubusercontent.com/ber-data/bertron/refs/heads/main/nmdc/nmdc_biosample_geo_coordinates.csv",
         );
         nmdcObjs.forEach((obj) => {
-          const latLon = [
-            parseFloat(obj["latitude"]),
-            parseFloat(obj["longitude"]),
-          ];
-          const popupStr = `NMDC Biosample<br/>${obj["biosample_id"]}`;
-          const marker = L.marker(latLon).bindPopup(popupStr);
+          const lat = parseFloat(obj["latitude"]);
+          const lon = parseFloat(obj["longitude"]);
+          const popupHtml = `NMDC Biosample<br/>${obj["biosample_id"]}`;
+          const marker = L.marker([lat, lon]).bindPopup(popupHtml);
           markerClusterGroup.addLayer(marker);
         });
-        console.debug(
-          `Created markers for ${nmdcObjs.length} NMDC biosamples.`,
-        );
+        console.debug(`Created ${nmdcObjs.length} markers.`);
 
-        // Fetch the ESS-Dive CSV file and create a marker for each row.
+        // Fetch the ESS-Dive Packages CSV file and create a marker for each row.
         const essDiveObjs = await fetchAndParseCsvFile(
           "https://raw.githubusercontent.com/ber-data/bertron/refs/heads/main/ess-dive/ess_dive_packages.csv",
         );
         essDiveObjs.forEach((obj) => {
-          const latLon = [
-            parseFloat(obj["centroid_latitude"]),
-            parseFloat(obj["centroid_longitude"]),
-          ];
+          const lat = parseFloat(obj["centroid_latitude"]);
+          const lon = parseFloat(obj["centroid_longitude"]);
           const popupStr = `ESS-Dive Package<br/>${obj["package_id"]}`;
-          const marker = L.marker(latLon).bindPopup(popupStr);
+          const marker = L.marker([lat, lon]).bindPopup(popupStr);
           markerClusterGroup.addLayer(marker);
         });
-        console.debug(
-          `Created markers for ${essDiveObjs.length} ESS-Dive packages.`,
-        );
+        console.debug(`Created ${essDiveObjs.length} markers.`);
 
-        // Fetch the JGI GOLD Biosample CSV file and create a marker for each row.
+        // Fetch the JGI GOLD Biosamples CSV file and create a marker for each row.
         const jgiGoldBsmObjs = await fetchAndParseCsvFile(
           "https://raw.githubusercontent.com/ber-data/bertron/refs/heads/main/jgi/jgi_gold_biosample_geo.csv",
         );
         jgiGoldBsmObjs.forEach((obj) => {
-          const latLon = [
-            parseFloat(obj["latitude"]),
-            parseFloat(obj["longitude"]),
-          ];
+          const lat = parseFloat(obj["latitude"]);
+          const lon = parseFloat(obj["longitude"]);
           const popupStr = `JGI GOLD Biosample<br/>${obj["gold_id"]}`;
-          const marker = L.marker(latLon).bindPopup(popupStr);
+          const marker = L.marker([lat, lon]).bindPopup(popupStr);
           markerClusterGroup.addLayer(marker);
         });
-        console.debug(
-          `Created markers for ${jgiGoldBsmObjs.length} JGI GOLD biosamples.`,
-        );
+        console.debug(`Created ${jgiGoldBsmObjs.length} markers.`);
 
-        // Fetch the JGI GOLD Organism CSV file and create a marker for each row.
+        // Fetch the JGI GOLD Organisms CSV file and create a marker for each row.
         const jgiGoldOrgObjs = await fetchAndParseCsvFile(
           "https://raw.githubusercontent.com/ber-data/bertron/refs/heads/main/jgi/jgi_gold_organism_geo.csv",
         );
         jgiGoldOrgObjs.forEach((obj) => {
-          const latLon = [
-            parseFloat(obj["latitude"]),
-            parseFloat(obj["longitude"]),
-          ];
+          const lat = parseFloat(obj["latitude"]);
+          const lon = parseFloat(obj["longitude"]);
           const popupStr = `JGI GOLD Organism<br/>${obj["gold_id"]}`;
-          const marker = L.marker(latLon).bindPopup(popupStr);
+          const marker = L.marker([lat, lon]).bindPopup(popupStr);
           markerClusterGroup.addLayer(marker);
         });
-        console.debug(
-          `Created markers for ${jgiGoldOrgObjs.length} JGI GOLD organisms.`,
-        );
+        console.debug(`Created ${jgiGoldOrgObjs.length} markers.`);
 
-        // Fetch the EMSL JSON file and create a marker for each element of its top-level array.
+        // Fetch the EMSL JSON (not CSV) file and create a marker for each element of its top-level array.
         const response = await fetch(
           "https://raw.githubusercontent.com/ber-data/bertron/refs/heads/main/emsl/latlon_project_ids.json",
         );
         const emslObjs = await response.json();
+        console.debug("Fetching and parsing finished.", { data: emslObjs });
         emslObjs.forEach((obj) => {
-          const latLon = [
-            parseFloat(obj["latitude"]),
-            parseFloat(obj["longitude"]),
-          ];
+          const lat = parseFloat(obj["latitude"]);
+          const lon = parseFloat(obj["longitude"]);
           const popupStr = `EMSL<br/>Proposal ${obj["proposal_id"]}, Sampling set ${obj["sampling_set"]}`;
-          const marker = L.marker(latLon).bindPopup(popupStr);
+          const marker = L.marker([lat, lon]).bindPopup(popupStr);
           markerClusterGroup.addLayer(marker);
         });
-        console.debug(`Created markers for ${emslObjs.length} EMSL objects.`);
+        console.debug(`Created ${emslObjs.length} markers.`);
 
+        // Add the marker cluster group to the map.
         map.addLayer(markerClusterGroup);
 
-        hideSpinner("spinner");
+        // Hide the spinner.
+        document.getElementById("spinner").setAttribute("hidden", "hidden");
       })();
     </script>
   </body>
