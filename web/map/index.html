@@ -122,8 +122,8 @@
         }
 
         /**
-         * Draw a map on the HTML element having the specified `id` value,
-         * returning the Leaflet map object.
+         * Draw a map on the HTML element having the specified `id` value
+         * and return the Leaflet map object.
          *
          * Reference: https://leafletjs.com/examples/quick-start/
          *
@@ -133,7 +133,7 @@
           // Create a map where, by default, the whole world is in view.
           const map = L.map(elementId).fitWorld().zoomIn();
 
-          // Add a layer of files provided by OpenStreetMap.
+          // Add a layer of tiles provided by OpenStreetMap.
           const tileUrlTemplate =
             "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
           const tileAttributionHTML =
@@ -145,14 +145,14 @@
           return map;
         }
 
-        // Show the spinner.
-        document.getElementById("spinner").removeAttribute("hidden");
-
         // Initialize the map.
         const map = initializeMap("map");
 
         // Initialize the cluter group to which we will add markers.
         const markerClusterGroup = L.markerClusterGroup();
+
+        // Show a spinner because we are about to fetch some data.
+        document.getElementById("spinner").removeAttribute("hidden");
 
         // Fetch the NMDC Biosamples CSV file and create a marker for each row.
         const nmdcObjs = await fetchAndParseCsvFile(
