@@ -30,6 +30,12 @@
       href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"
     />
 
+    <!-- leaflet-geosearch CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet-geosearch@4.2.0/dist/geosearch.css"
+    />
+
     <!-- Custom CSS -->
     <style>
       #map {
@@ -77,6 +83,9 @@
 
     <!-- Leaflet.markercluster JS -->
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
+    <!-- leaflet-geosearch JS -->
+    <script src="https://unpkg.com/leaflet-geosearch@4.2.0/dist/bundle.min.js"></script>
 
     <!-- PapaParse JS -->
     <script src="https://unpkg.com/papaparse@5.5.2/papaparse.min.js"></script>
@@ -260,6 +269,14 @@
 
         // Add the marker cluster group to the map.
         map.addLayer(markerClusterGroup);
+
+        // Set up the address-based search widget.
+        // Reference: https://smeijer.github.io/leaflet-geosearch/
+        const search = new GeoSearch.GeoSearchControl({
+          provider: new GeoSearch.OpenStreetMapProvider(),
+          style: "button", // other option is: "bar"
+        });
+        map.addControl(search);
 
         // Hide the spinner.
         document.getElementById("spinner").setAttribute("hidden", "hidden");

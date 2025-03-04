@@ -18,6 +18,7 @@ This web page is built upon the following technologies:
 
 - [Leaflet](https://leafletjs.com/) - to show the map ([BSD 2-Clause "Simplified" license](https://github.com/Leaflet/Leaflet/blob/main/LICENSE))
 - [Leaflet.markercluster](https://github.com/Leaflet/Leaflet.markercluster) - to show map markers as clusters ([MIT license](https://github.com/Leaflet/Leaflet.markercluster/blob/master/MIT-LICENCE.txt))
+- [leaflet-geosearch](https://smeijer.github.io/leaflet-geosearch/#using-a-cdn) - to add a geolocation search widget ([MIT license](https://github.com/smeijer/leaflet-geosearch/blob/main/LICENSE))
 - [PapaParse](https://github.com/mholt/PapaParse) - to fetch and parse CSV files ([MIT license](https://github.com/mholt/PapaParse/blob/master/LICENSE))
 - [Prettier](https://prettier.io) - to format our source code ([MIT license](https://github.com/prettier/prettier/blob/main/LICENSE))
 - [Bootstrap 5](https://getbootstrap.com/) - to style the web page elements other than the map ([MIT license](https://github.com/twbs/bootstrap/blob/main/LICENSE))
