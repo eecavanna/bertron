@@ -145,6 +145,39 @@
           return map;
         }
 
+        /**
+         * Get the float equivalents of the latitude and longitude values
+         * residing in the specified properties of the specified object,
+         * logging a warning if we fail to parse any of them as floats.
+         *
+         * @param obj         Object whose properties contain latitude and
+         *                    longitude information
+         * @param latPropName Name of the object's property containing
+         *                    the latitude as a string
+         * @param lonPropName Name of the object's property containing
+         *                    the longitude as a string
+         * @return {number[]} An array whose first element is the latitude as
+         *                    a float, and whose second element is the
+         *                    longitude as a float
+         */
+        function getLatLon(
+          obj,
+          latPropName = "latitude",
+          lonPropName = "longitude",
+        ) {
+          const lat = parseFloat(obj[latPropName]);
+          if (isNaN(lat)) {
+            console.warn(`Invalid latitude.`, obj);
+          }
+
+          const lon = parseFloat(obj[lonPropName]);
+          if (isNaN(lon)) {
+            console.warn(`Invalid longitude.`, obj);
+          }
+
+          return [lat, lon];
+        }
+
         // Initialize the map.
         const map = initializeMap("map");
 
@@ -159,10 +192,10 @@
           "https://raw.githubusercontent.com/ber-data/bertron/refs/heads/main/nmdc/nmdc_biosample_geo_coordinates.csv",
         );
         nmdcObjs.forEach((obj) => {
-          const lat = parseFloat(obj["latitude"]);
-          const lon = parseFloat(obj["longitude"]);
-          const popupHtml = `NMDC Biosample<br/>${obj["biosample_id"]}`;
-          const marker = L.marker([lat, lon]).bindPopup(popupHtml);
+          const latLon = getLatLon(obj);
+          const identifier = obj["biosample_id"];
+          const popupHtml = `NMDC Biosample<br/>${identifier}`;
+          const marker = L.marker(latLon).bindPopup(popupHtml);
           markerClusterGroup.addLayer(marker);
         });
         console.debug(`Created ${nmdcObjs.length} markers.`);
@@ -172,10 +205,14 @@
           "https://raw.githubusercontent.com/ber-data/bertron/refs/heads/main/ess-dive/ess_dive_packages.csv",
         );
         essDiveObjs.forEach((obj) => {
-          const lat = parseFloat(obj["centroid_latitude"]);
-          const lon = parseFloat(obj["centroid_longitude"]);
-          const popupStr = `ESS-Dive Package<br/>${obj["package_id"]}`;
-          const marker = L.marker([lat, lon]).bindPopup(popupStr);
+          const latLon = getLatLon(
+            obj,
+            "centroid_latitude",
+            "centroid_longitude",
+          );
+          const identifier = obj["package_id"];
+          const popupStr = `ESS-Dive Package<br/>${identifier}`;
+          const marker = L.marker(latLon).bindPopup(popupStr);
           markerClusterGroup.addLayer(marker);
         });
         console.debug(`Created ${essDiveObjs.length} markers.`);
@@ -185,10 +222,10 @@
           "https://raw.githubusercontent.com/ber-data/bertron/refs/heads/main/jgi/jgi_gold_biosample_geo.csv",
         );
         jgiGoldBsmObjs.forEach((obj) => {
-          const lat = parseFloat(obj["latitude"]);
-          const lon = parseFloat(obj["longitude"]);
-          const popupStr = `JGI GOLD Biosample<br/>${obj["gold_id"]}`;
-          const marker = L.marker([lat, lon]).bindPopup(popupStr);
+          const latLon = getLatLon(obj);
+          const identifier = obj["gold_id"];
+          const popupStr = `JGI GOLD Biosample<br/>${identifier}`;
+          const marker = L.marker(latLon).bindPopup(popupStr);
           markerClusterGroup.addLayer(marker);
         });
         console.debug(`Created ${jgiGoldBsmObjs.length} markers.`);
@@ -198,10 +235,10 @@
           "https://raw.githubusercontent.com/ber-data/bertron/refs/heads/main/jgi/jgi_gold_organism_geo.csv",
         );
         jgiGoldOrgObjs.forEach((obj) => {
-          const lat = parseFloat(obj["latitude"]);
-          const lon = parseFloat(obj["longitude"]);
-          const popupStr = `JGI GOLD Organism<br/>${obj["gold_id"]}`;
-          const marker = L.marker([lat, lon]).bindPopup(popupStr);
+          const latLon = getLatLon(obj);
+          const identifier = obj["gold_id"];
+          const popupStr = `JGI GOLD Organism<br/>${identifier}`;
+          const marker = L.marker(latLon).bindPopup(popupStr);
           markerClusterGroup.addLayer(marker);
         });
         console.debug(`Created ${jgiGoldOrgObjs.length} markers.`);
@@ -213,10 +250,10 @@
         const emslObjs = await response.json();
         console.debug("Fetching and parsing finished.", { data: emslObjs });
         emslObjs.forEach((obj) => {
-          const lat = parseFloat(obj["latitude"]);
-          const lon = parseFloat(obj["longitude"]);
-          const popupStr = `EMSL<br/>Proposal ${obj["proposal_id"]}, Sampling set ${obj["sampling_set"]}`;
-          const marker = L.marker([lat, lon]).bindPopup(popupStr);
+          const latLon = getLatLon(obj);
+          const identifier = `P: ${obj["proposal_id"]}, S: ${obj["sampling_set"]}`;
+          const popupStr = `EMSL<br/>${identifier}`;
+          const marker = L.marker(latLon).bindPopup(popupStr);
           markerClusterGroup.addLayer(marker);
         });
         console.debug(`Created ${emslObjs.length} markers.`);
